@@ -448,61 +448,201 @@ int getPoint(Circle c1, Circle c2, pair<Point, Point>& crossPair) noexcept
 //直线集合
 int calPoint(vector<Line>& lineSet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < lineSet.size(); i++)
+	{
+		for (unsigned int j = i + 1; j < lineSet.size(); j++)
+		{
+			Point crossPoint;
+			const int result = getPoint(lineSet.at(i), lineSet.at(j), crossPoint);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPoint);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //直线集合与线段集合
 int calPoint(vector<Line>& lineSet, vector<Segment>& segmentSet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < lineSet.size(); i++)
+	{
+		for (unsigned int j = 0; j < segmentSet.size(); j++)
+		{
+			Point crossPoint;
+			const int result = getPoint(lineSet.at(i), segmentSet.at(j), crossPoint);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPoint);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //直线集合与射线集合
 int calPoint(vector<Line>& lineSet, vector<Ray>& raySet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < lineSet.size(); i++)
+	{
+		for (unsigned int j = 0; j < raySet.size(); j++)
+		{
+			Point crossPoint;
+			const int result = getPoint(lineSet.at(i), raySet.at(j), crossPoint);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPoint);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //直线集合与圆集合
 int calPoint(vector<Line>& lineSet, vector<Circle>& circleSet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < lineSet.size(); i++)
+	{
+		for (unsigned int j = 0; j < circleSet.size(); j++)
+		{
+			pair<Point, Point> crossPair;
+			const int result = getPoint(lineSet.at(i), circleSet.at(j), crossPair);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPair.first);
+			}
+			else if (result == TWOCROSS)
+			{
+				pointSet.insert(crossPair.first);
+				pointSet.insert(crossPair.second);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //线段集合
 int calPoint(vector<Segment>& segmentSet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < segmentSet.size(); i++)
+	{
+		for (unsigned int j = i + 1; j < segmentSet.size(); j++)
+		{
+			Point crossPoint;
+			const int result = getPoint(segmentSet.at(i), segmentSet.at(j), crossPoint);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPoint);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //线段集合与射线集合
 int calPoint(vector<Segment>& segmentSet, vector<Ray>& raySet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < segmentSet.size(); i++)
+	{
+		for (unsigned int j = 0; j < raySet.size(); j++)
+		{
+			Point crossPoint;
+			const int result = getPoint(segmentSet.at(i), raySet.at(j), crossPoint);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPoint);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //线段集合与圆集合
 int calPoint(vector<Segment>& segmentSet, vector<Circle>& circleSet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < segmentSet.size(); i++)
+	{
+		for (unsigned int j = 0; j < circleSet.size(); j++)
+		{
+			pair<Point, Point> crossPair;
+			const int result = getPoint(segmentSet.at(i), circleSet.at(j), crossPair);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPair.first);
+			}
+			else if (result == TWOCROSS)
+			{
+				pointSet.insert(crossPair.first);
+				pointSet.insert(crossPair.second);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //射线集合
 int calPoint(vector<Ray>& raySet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < raySet.size(); i++)
+	{
+		for (unsigned int j = i + 1; j < raySet.size(); j++)
+		{
+			Point crossPoint;
+			const int result = getPoint(raySet.at(i), raySet.at(j), crossPoint);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPoint);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //射线集合与圆集合
 int calPoint(vector<Ray>& raySet, vector<Circle>& circleSet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < raySet.size(); i++)
+	{
+		for (unsigned int j = 0; j < circleSet.size(); j++)
+		{
+			pair<Point, Point> crossPair;
+			const int result = getPoint(raySet.at(i), circleSet.at(j), crossPair);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPair.first);
+			}
+			else if (result == TWOCROSS)
+			{
+				pointSet.insert(crossPair.first);
+				pointSet.insert(crossPair.second);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //圆集合
 int calPoint(vector<Circle>& circleSet, set<Point>& pointSet)
 {
-	
+	for (unsigned int i = 0; i < circleSet.size(); i++)
+	{
+		for (unsigned int j = i + 1; j < circleSet.size(); j++)
+		{
+			pair<Point, Point> crossPair;
+			const int result = getPoint(circleSet.at(i), circleSet.at(j), crossPair);
+			if (result == ONECROSS)
+			{
+				pointSet.insert(crossPair.first);
+			}
+			else if (result == TWOCROSS)
+			{
+				pointSet.insert(crossPair.first);
+				pointSet.insert(crossPair.second);
+			}
+		}
+	}
+	return pointSet.size();
 }
 
 //计算总交点个数
