@@ -98,6 +98,48 @@ Line rayToLine(Ray r)
 	return l;
 }
 
+//判断一个点是否在一线段的横坐标范围内
+int pointIfOnSeg(Point p, Line l)
+{
+	if ((p.x >= l.p1.x) && (p.x <= l.p2.x))
+	{
+		return ON;
+	}
+	else
+	{
+		return NOTON;
+	}
+}
+
+//判断一个点是否在一射线的横坐标范围内
+int pointIfOnRay(Point p, Line l)
+{
+	if (l.p2.x <= l.p1.x)
+	{
+		//若射线指向负方向
+		if (p.x <= l.p1.x)
+		{
+			return ON;
+		}
+		else
+		{
+			return NOTON;
+		}
+	}
+	else
+	{
+		//若射线指向正方向
+		if (p.x > l.p1.x)
+		{
+			return ON;
+		}
+		else
+		{
+			return NOTON;
+		}
+	}
+}
+
 //求两直线交点
 int getPoint(Line l1, Line l2, Point& crossPoint) noexcept
 {
@@ -130,13 +172,45 @@ int getPoint(Line l1, Line l2, Point& crossPoint) noexcept
 //求直线与线段的交点
 int getPoint(Line l, Segment s, Point& crossPoint) noexcept
 {
-	
+	Line l2 = segmentToLine(s);
+	int result = getPoint(l, l2, crossPoint);
+	if (result == NOCROSS)
+	{
+		return NOCROSS;
+	}
+	else 
+	{
+		if (pointIfOnSeg(crossPoint, l2))
+		{
+			return ONECROSS;
+		}
+		else
+		{
+			return NOCROSS;
+		}
+	}
 }
 
 //求直线与射线的交点
 int getPoint(Line l, Ray r, Point& crossPoint) noexcept
 {
-	
+	Line l2 = rayToLine(r);
+	int result = getPoint(l, l2, crossPoint);
+	if (result == NOCROSS)
+	{
+		return NOCROSS;
+	}
+	else
+	{
+		if (pointIfOnRay(crossPoint, l2))
+		{
+			return ONECROSS;
+		}
+		else
+		{
+			return NOCROSS;
+		}
+	}
 }
 
 //求直线与圆的交点
@@ -171,31 +245,174 @@ int getPoint(Line l, Circle c, pair<Point, Point>& crossPair) noexcept
 //求两线段交点
 int getPoint(Segment s1, Segment s2, Point& crossPoint) noexcept
 {
-	
+	Line l1 = segmentToLine(s1);
+	Line l2 = segmentToLine(s2);
+	int result = getPoint(l1, l2, crossPoint);
+	if (result == NOCROSS)
+	{
+		return NOCROSS;
+	}
+	else
+	{
+		if (pointIfOnSeg(crossPoint, l1) && pointIfOnSeg(crossPoint, l2))
+		{
+			return ONECROSS;
+		}
+		else
+		{
+			return NOCROSS;
+		}
+	}
 }
 
 //求线段与射线的交点
 int getPoint(Segment s, Ray r, Point& crossPoint) noexcept
 {
-	
+	Line l1 = segmentToLine(s);
+	Line l2 = rayToLine(r);
+	int result = getPoint(l1, l2, crossPoint);
+	if (result == NOCROSS)
+	{
+		return NOCROSS;
+	}
+	else
+	{
+		if (pointIfOnSeg(crossPoint, l1) && pointIfOnRay(crossPoint, l2))
+		{
+			return ONECROSS;
+		}
+		else
+		{
+			return NOCROSS;
+		}
+	}
 }
 
 //求线段与圆的交点
 int getPoint(Segment s, Circle c, pair<Point, Point>& crossPair) noexcept
 {
-	
+	Line l = segmentToLine(s);
+	int result = getPoint(l, c, crossPair);
+	if (result == NOCROSS)
+	{
+		return NOCROSS;
+	}
+	else if (result == ONECROSS)
+	{
+		if (pointIfOnSeg(crossPair.first, l))
+		{
+			return ONECROSS;
+		}
+		else
+		{
+			return NOCROSS;
+		}
+	}
+	else
+	{
+		if (pointIfOnSeg(crossPair.second, l))
+		{
+			if (pointIfOnSeg(crossPair.first, l))
+			{
+				//1在2在
+				return TWOCROSS;
+			}
+			else
+			{
+				//1不在2在
+				crossPair.first = crossPair.second;
+				return ONECROSS;
+			}
+		}
+		else
+		{
+			if (pointIfOnSeg(crossPair.first, l))
+			{
+				//1在2不在
+				return ONECROSS;
+			}
+			else
+			{
+				//1不在2不在
+				return NOCROSS;
+			}
+		}
+	}
 }
 
 //求两射线交点
 int getPoint(Ray r1, Ray r2, Point& crossPoint) noexcept
 {
-	
+	Line l1 = rayToLine(r1);
+	Line l2 = rayToLine(r2);
+	int result = getPoint(l1, l2, crossPoint);
+	if (result == NOCROSS)
+	{
+		return NOCROSS;
+	}
+	else
+	{
+		if (pointIfOnRay(crossPoint, l1) && pointIfOnRay(crossPoint, l2))
+		{
+			return ONECROSS;
+		}
+		else
+		{
+			return NOCROSS;
+		}
+	}
 }
 
 //求射线和圆的交点
 int getPoint(Ray r, Circle c, pair<Point, Point>& crossPair) noexcept
 {
-	
+	Line l = rayToLine(r);
+	int result = getPoint(l, c, crossPair);
+	if (result == NOCROSS)
+	{
+		return NOCROSS;
+	}
+	else if (result == ONECROSS)
+	{
+		if (pointIfOnRay(crossPair.first, l))
+		{
+			return ONECROSS;
+		}
+		else
+		{
+			return NOCROSS;
+		}
+	}
+	else
+	{
+		if (pointIfOnRay(crossPair.second, l))
+		{
+			if (pointIfOnRay(crossPair.first, l))
+			{
+				//1在2在
+				return TWOCROSS;
+			}
+			else
+			{
+				//1不在2在
+				crossPair.first = crossPair.second;
+				return ONECROSS;
+			}
+		}
+		else
+		{
+			if (pointIfOnRay(crossPair.first, l))
+			{
+				//1在2不在
+				return ONECROSS;
+			}
+			else
+			{
+				//1不在2不在
+				return NOCROSS;
+			}
+		}
+	}
 }
 
 //求两圆交点
