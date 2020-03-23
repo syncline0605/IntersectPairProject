@@ -68,10 +68,11 @@ double getAngleFromPoint(Point p) noexcept
 }
 
 //将线段转化成对应的直线
+//将横坐标较小的点作为p1，若两点横坐标相同则将纵坐标较小的点作为p1
 Line segmentToLine(Segment s)
 {
 	Line l;
-	if (s.p1.x <= s.p2.x)
+	if ((s.p1.x < s.p2.x) || ((s.p1.x == s.p2.x) && (s.p1.y < s.p2.y)))
 	{
 		l.p1 = s.p1;
 		l.p2 = s.p2;
@@ -91,23 +92,37 @@ Line rayToLine(Ray r)
 	return l;
 }
 
-//判断一个点是否在一线段的横坐标范围内
+//判断一个点是否在一线段的坐标范围内
 int pointIfOnSeg(Point p, Line l)
 {
-	if ((p.x >= l.p1.x) && (p.x <= l.p2.x))
+	if (l.p1.x == l.p2.x)
 	{
-		return ON;
+		if ((p.y >= l.p1.y) && (p.y <= l.p2.y))
+		{
+			return ON;
+		}
+		else
+		{
+			return NOTON;
+		}
 	}
 	else
 	{
-		return NOTON;
+		if ((p.x >= l.p1.x) && (p.x <= l.p2.x))
+		{
+			return ON;
+		}
+		else
+		{
+			return NOTON;
+		}
 	}
 }
 
-//判断一个点是否在一射线的横坐标范围内
+//判断一个点是否在一射线的坐标范围内
 int pointIfOnRay(Point p, Line l)
 {
-	if (l.p2.x <= l.p1.x)
+	if (l.p2.x < l.p1.x)
 	{
 		//若射线指向负方向
 		if (p.x <= l.p1.x)
@@ -119,10 +134,34 @@ int pointIfOnRay(Point p, Line l)
 			return NOTON;
 		}
 	}
+	else if (l.p2.x == l.p1.x && l.p2.y < l.p1.y)
+	{
+		//若射线指向正下方
+		if (p.y <= l.p1.y)
+		{
+			return ON;
+		}
+		else
+		{
+			return NOTON;
+		}
+	}
+	else if (l.p2.x == l.p1.x && l.p2.y > l.p1.y)
+	{
+		//若射线指向正上方
+		if (p.y >= l.p1.y)
+		{
+			return ON;
+		}
+		else
+		{
+			return NOTON;
+		}
+	}
 	else
 	{
 		//若射线指向正方向
-		if (p.x > l.p1.x)
+		if (p.x >= l.p1.x)
 		{
 			return ON;
 		}
