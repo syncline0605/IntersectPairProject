@@ -52,13 +52,6 @@ Point getProjection(Point a, Line l) noexcept
 	return pr;
 }
 
-//求点到直线的距离
-double getPointLineDistance(Point a, Line l) noexcept
-{
-	const Point pr = getProjection(a, l);
-	return getPointsDistance(a, pr);
-}
-
 //通过极坐标系上的极角和极径求在直角坐标系中的坐标
 Point getCoorFromPolar(double x, double r) noexcept
 {

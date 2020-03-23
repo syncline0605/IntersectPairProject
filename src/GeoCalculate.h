@@ -17,7 +17,6 @@ double getPointsDistance(Point a, Point b) noexcept;
 Vector getVector(Point a, Point b) noexcept;
 Vector getUnitVector(Vector v) noexcept;
 Point getProjection(Point a, Line l) noexcept;
-double getPointLineDistance(Point a, Line l) noexcept;
 Point getCoorFromPolar(double x, double r) noexcept;
 double getAngleFromPoint(Point p) noexcept;
 Line segmentToLine(Segment s);
