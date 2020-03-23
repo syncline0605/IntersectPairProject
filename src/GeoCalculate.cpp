@@ -1,5 +1,7 @@
+#include <iostream>
 #include "GeoFigures.h"
 #include "GeoCalculate.h"
+#include "Exception.h"
 
 using namespace std;
 
@@ -182,6 +184,9 @@ int getPoint(Line l1, Line l2, Point& crossPoint) noexcept
 		//若两直线的斜率都不存在，则无交点
 		return NOCROSS;
 	}
+	else if (flag1 == 0 && flag2 == 0 && l1.p1.x == l2.p1.x) {
+		return MANYCROSS;
+	}
 	//计算出用一般式表示两条直线时的系数a、b、c
 	//再使用数学公式判断是否存在交点和交点的坐标
 	const double a1 = l1.p1.y - l1.p2.y;
@@ -190,6 +195,16 @@ int getPoint(Line l1, Line l2, Point& crossPoint) noexcept
 	const double a2 = l2.p1.y - l2.p2.y;
 	const double b2 = l2.p2.x - l2.p1.x;
 	const double c2 = l2.p1.x * l2.p2.y - l2.p2.x * l2.p1.y;
+
+	if (a1 == 0 && a2 == 0 && (b1 * c2 == b2 * c1)) {		// 斜率为0
+		return MANYCROSS;
+	}
+	else if ((a1 * b2 == a2 * b1) && c1 == 0 && c2 == 0) {
+		return MANYCROSS;
+	}
+	else if ((a1 * b2 == a2 * b1) && (b1 * c2 == b2 * c1)) {
+		return MANYCROSS;
+	}
 
 	const double D = a1 * b2 - a2 * b1;
 	if (D == 0)
@@ -209,6 +224,9 @@ int getPoint(Line l, Segment s, Point& crossPoint) noexcept
 	if (result == NOCROSS)
 	{
 		return NOCROSS;
+	}
+	else if (result == MANYCROSS) {
+		return MANYCROSS;
 	}
 	else 
 	{
@@ -231,6 +249,9 @@ int getPoint(Line l, Ray r, Point& crossPoint) noexcept
 	if (result == NOCROSS)
 	{
 		return NOCROSS;
+	}
+	else if (result == MANYCROSS) {
+		return MANYCROSS;
 	}
 	else
 	{
@@ -284,6 +305,41 @@ int getPoint(Segment s1, Segment s2, Point& crossPoint) noexcept
 	{
 		return NOCROSS;
 	}
+	else if (result == MANYCROSS) {
+		// 不重合
+		// 重合，就一个交点
+		// 重合，无穷个交点
+		if (s1.p1.x == s1.p2.x) {	// 斜率不存在
+			double max1 = s1.p1.y > s1.p2.y ? s1.p1.y : s1.p2.y;
+			double max2 = s2.p1.y > s2.p2.y ? s2.p1.y : s2.p2.y;
+			double min1 = s1.p1.y < s1.p2.y ? s1.p1.y : s1.p2.y;
+			double min2 = s2.p1.y < s2.p2.y ? s2.p1.y : s2.p2.y;
+			if (max1 < min2 || max2 < min1) {	// 最大的比最小的还小，就没有重合
+				return NOCROSS;
+			}
+			else if (max1 == min2 || max2 == min1) {	// 一个交点
+				return ONECROSS;
+			}
+			else {	// 无穷个交点
+				return MANYCROSS;
+			}
+		}
+		else {	// 斜率存在
+			double max1 = s1.p1.x > s1.p2.x ? s1.p1.x : s1.p2.x;
+			double max2 = s2.p1.x > s2.p2.x ? s2.p1.x : s2.p2.x;
+			double min1 = s1.p1.x < s1.p2.x ? s1.p1.x : s1.p2.x;
+			double min2 = s2.p1.x < s2.p2.x ? s2.p1.x : s2.p2.x;
+			if (max1 < min2 || max2 < min1) {	// 最大的比最小的还小，就没有重合
+				return NOCROSS;
+			}
+			else if (max1 == min2 || max2 == min1) {	// 一个交点
+				return ONECROSS;
+			}
+			else {
+				return MANYCROSS;
+			}
+		}
+	}
 	else
 	{
 		if (pointIfOnSeg(crossPoint, l1) && pointIfOnSeg(crossPoint, l2))
@@ -306,6 +362,39 @@ int getPoint(Segment s, Ray r, Point& crossPoint) noexcept
 	if (result == NOCROSS)
 	{
 		return NOCROSS;
+	}
+	else if (result == MANYCROSS) {
+		// 不重合
+		// 重合，就一个交点
+		// 重合，无穷个交点
+		if (s.p1.x == s.p2.x) {	// 斜率不存在
+			double max1 = s.p1.y > s.p2.y ? s.p1.y : s.p2.y;
+			double min1 = s.p1.y < s.p2.y ? s.p1.y : s.p2.y;
+			double dis = r.direction.y - r.start.y;
+			if ((dis > 0 && max1 < r.start.y) || (dis <0 && min1 > r.start.y)) {	// 没有重合
+				return NOCROSS;
+			}
+			else if ((dis > 0 && max1 == r.start.y) || (dis < 0 && min1 == r.start.y)) {	// 一个交点
+				return ONECROSS;
+			}
+			else {	// 无穷个交点
+				return MANYCROSS;
+			}
+		}
+		else {	// 斜率存在
+			double max1 = s.p1.x > s.p2.x ? s.p1.x : s.p2.x;
+			double min1 = s.p1.x < s.p2.x ? s.p1.x : s.p2.x;
+			double dis = r.direction.x - r.start.x;
+			if ((dis > 0 && max1 < r.start.x) || (dis <0 && min1 > r.start.x)) {	// 没有重合
+				return NOCROSS;
+			}
+			else if ((dis > 0 && max1 == r.start.x) || (dis < 0 && min1 == r.start.x)) {	// 一个交点
+				return ONECROSS;
+			}
+			else {	// 无穷个交点
+				return MANYCROSS;
+			}
+		}
 	}
 	else
 	{
@@ -381,6 +470,37 @@ int getPoint(Ray r1, Ray r2, Point& crossPoint) noexcept
 	if (result == NOCROSS)
 	{
 		return NOCROSS;
+	}
+	else if (result == MANYCROSS) {
+		// 不重合
+		// 重合，就一个交点
+		// 重合，无穷个交点
+		if (r1.start.x == r1.direction.x) {	// 斜率不存在
+			double dis1 = r1.direction.y - r1.start.y;
+			double dis2 = r2.direction.y - r2.start.y;
+			if ((dis1 * dis2 < 0) && (dis1 * (r2.start.y - r1.start.y) < 0)) {	// 没有重合
+				return NOCROSS;
+			}
+			else if ((dis1 * dis2 < 0) && (r1.start.y == r2.start.y)) {	// 一个交点
+				return ONECROSS;
+			}
+			else {	// 无穷个交点
+				return MANYCROSS;
+			}
+		}
+		else {	// 斜率存在
+			double dis1 = r1.direction.x - r1.start.x;
+			double dis2 = r2.direction.x - r2.start.x;
+			if ((dis1 * dis2 < 0) && (dis1 * (r2.start.x - r1.start.x) < 0)) {	// 没有重合
+				return NOCROSS;
+			}
+			else if ((dis1 * dis2 < 0) && (r1.start.x == r2.start.x)) {	// 一个交点
+				return ONECROSS;
+			}
+			else {	// 无穷个交点
+				return MANYCROSS;
+			}
+		}
 	}
 	else
 	{
@@ -490,6 +610,9 @@ int calPoint(vector<Line>& lineSet, set<Point>& pointSet)
 			{
 				pointSet.insert(crossPoint);
 			}
+			else if (result == MANYCROSS) {
+				throw infException();
+			}
 		}
 	}
 	return pointSet.size();
@@ -508,6 +631,9 @@ int calPoint(vector<Line>& lineSet, vector<Segment>& segmentSet, set<Point>& poi
 			{
 				pointSet.insert(crossPoint);
 			}
+			else if (result == MANYCROSS) {
+				throw infException();
+			}
 		}
 	}
 	return pointSet.size();
@@ -525,6 +651,9 @@ int calPoint(vector<Line>& lineSet, vector<Ray>& raySet, set<Point>& pointSet)
 			if (result == ONECROSS)
 			{
 				pointSet.insert(crossPoint);
+			}
+			else if (result == MANYCROSS) {
+				throw infException();
 			}
 		}
 	}
@@ -567,6 +696,9 @@ int calPoint(vector<Segment>& segmentSet, set<Point>& pointSet)
 			{
 				pointSet.insert(crossPoint);
 			}
+			else if (result == MANYCROSS) {
+				throw infException();
+			}
 		}
 	}
 	return pointSet.size();
@@ -584,6 +716,9 @@ int calPoint(vector<Segment>& segmentSet, vector<Ray>& raySet, set<Point>& point
 			if (result == ONECROSS)
 			{
 				pointSet.insert(crossPoint);
+			}
+			else if (result == MANYCROSS) {
+				throw infException();
 			}
 		}
 	}
@@ -625,6 +760,9 @@ int calPoint(vector<Ray>& raySet, set<Point>& pointSet)
 			if (result == ONECROSS)
 			{
 				pointSet.insert(crossPoint);
+			}
+			else if (result == MANYCROSS) {
+				throw infException();
 			}
 		}
 	}
@@ -680,15 +818,75 @@ int calPoint(vector<Circle>& circleSet, set<Point>& pointSet)
 //计算总交点个数
 int calPoint(vector<Line>& lineSet, vector<Segment>& segmentSet, vector<Ray>& raySet, vector<Circle>& circleSet, set<Point>& pointSet)
 {
-	calPoint(lineSet, pointSet);
-	calPoint(lineSet, segmentSet, pointSet);
-	calPoint(lineSet, raySet, pointSet);
-	calPoint(lineSet, circleSet, pointSet);
-	calPoint(segmentSet, pointSet);
-	calPoint(segmentSet, raySet, pointSet);
-	calPoint(segmentSet, circleSet, pointSet);
-	calPoint(raySet, pointSet);
-	calPoint(raySet, circleSet, pointSet);
-	calPoint(circleSet, pointSet);
+	try {
+		calPoint(lineSet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+
+	try {
+		calPoint(lineSet, segmentSet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+
+	try {
+		calPoint(lineSet, raySet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+
+	try {
+		calPoint(lineSet, circleSet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+	
+	try {
+		calPoint(segmentSet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+	
+	try {
+		calPoint(segmentSet, raySet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+
+	try {
+		calPoint(segmentSet, circleSet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+	
+	try {
+		calPoint(raySet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+	
+	try {
+		calPoint(raySet, circleSet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+	
+	try {
+		calPoint(circleSet, pointSet);
+	}
+	catch (infException& e) {
+		cout << "有无穷个交点！" << endl;
+	}
+
 	return pointSet.size();
 }
