@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "GeoFigures.h"
+#include "Exception.h"
 
 using namespace std;
 
@@ -11,18 +12,22 @@ void parseCommandLine(int argc, char* argv[], string& inputstring, string& outpu
 {
 	string in = "-i";
 	string out = "-o";
-	for (int i = 1; i < argc; i++)
+	if (argc != 5)
 	{
-		string command = argv[i];
-		if (!command.compare(in))
-		{
-			inputstring = argv[++i];
-		}
-		else if (!command.compare(out))
-		{
-			outputstring = argv[++i];
-		}
+		throw commandException();
 	}
+	string command = argv[1];
+	if (command.compare(in))
+	{
+		throw commandException();
+	}
+	inputstring = argv[2];
+	command = argv[3];
+	if (command.compare(out))
+	{
+		throw commandException();
+	}
+	inputstring = argv[4];
 }
 //从输入文件里获取输入对象
 void getInput(string inputstring, vector<Line>& lineSet,
