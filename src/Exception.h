@@ -8,14 +8,6 @@ struct outRangeException : public exception
 	}
 };
 
-struct numException : public exception
-{
-	const char* what() const throw ()
-	{
-		return "参数个数有误！";
-	}
-};
-
 struct commandException : public exception
 {
 	const char* what() const throw ()

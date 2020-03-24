@@ -23,7 +23,22 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	getInput(inputstring, lineSet, segmentSet, raySet, circleSet);
+	try {
+		getInput(inputstring, lineSet, segmentSet, raySet, circleSet);
+	}
+	catch (illegalInputPattern& e) {
+		cout << "非法输入格式！" << endl;
+		return 0;
+	}
+	catch (notEnoughInputElement& e) {
+		cout << "输入的几何对象个数不足！" << endl;
+		return 0;
+	}
+	catch (TooManyInputElements& e) {
+		cout << "文件尾输入了无关的信息或过多的几何对象！" << endl;
+		return 0;
+	}
+	
 	const int n = calPoint(lineSet, segmentSet, raySet, circleSet, pointSet);
 	outputInFile(outputstring, n);
 
