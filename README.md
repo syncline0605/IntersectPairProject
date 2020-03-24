@@ -1,5 +1,14 @@
 ### 软件工程结对项目
 
+作业地址：[https://edu.cnblogs.com/campus/buaa/BUAA_SE_2020_LJ/homework/10466](https://edu.cnblogs.com/campus/buaa/BUAA_SE_2020_LJ/homework/10466)
+
+博客地址：[https://www.cnblogs.com/syncline/p/12559007.html](https://www.cnblogs.com/syncline/p/12559007.html)
+
+#### 命令行可执行文件
+
+- 位置：bin/intersect.exe
+- 源代码：src/
+
 对给定的N个几何对象，询问平面中有多少个点在**至少2个**给定的集合对象上。
 
 支持的几何对象为：直线、射线、线段、圆。
@@ -20,3 +29,12 @@
 | `-i <path to input file>`  | 带一个参数，表示输入文件的路径（绝对或相对路径） | `intersect.exe -i input.txt -o output.txt` |
 | `-o <path to output file>` | 带一个参数，表示输出文件的路径（绝对或相对路径） | `intersect.exe -i input.txt -o output.txt` |
 
+
+
+#### GUI可执行文件
+
+- 位置：GUI/GUI.exe
+- 源代码：UIsrc/
+
+- 运行方法：运行GUI/GUI.exe
+- 具体使用方法：见博客 [https://www.cnblogs.com/syncline/p/12559007.html](https://www.cnblogs.com/syncline/p/12559007.html)
