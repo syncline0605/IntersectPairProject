@@ -84,7 +84,6 @@ void getInput(string inputstring, vector<Line>& lineSet,
 			getline(input, newInputLine);
 			if (!regex_match(newInputLine, FOURregex))
 			{
-				cout << newInputLine << endl;
 				throw illegalInputPattern();
 				return;
 			}
@@ -98,7 +97,6 @@ void getInput(string inputstring, vector<Line>& lineSet,
 			getline(input, newInputLine);
 			if (!regex_match(newInputLine, FOURregex))
 			{
-				cout << newInputLine << endl;
 				throw illegalInputPattern();
 				return;
 			}
@@ -112,7 +110,6 @@ void getInput(string inputstring, vector<Line>& lineSet,
 			getline(input, newInputLine);
 			if (!regex_match(newInputLine, THREEregex))
 			{
-				cout << newInputLine << endl;
 				throw illegalInputPattern();
 				return;
 			}

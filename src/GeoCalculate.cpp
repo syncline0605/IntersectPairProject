@@ -5,6 +5,71 @@
 
 using namespace std;
 
+int testDoubleRange(double r)
+{
+	const double max = 100000;
+	const double min = -100000;
+	if (r >= max || r <= min)
+	{
+		return OUTRANGE;
+	}
+	else
+	{
+		return INRANGE;
+	}
+}
+
+int testPointRange(Point p)
+{
+	if ((testDoubleRange(p.x) == OUTRANGE) ||
+		(testDoubleRange(p.y) == OUTRANGE))
+	{
+		return OUTRANGE;
+	}
+	else
+	{
+		return INRANGE;
+	}
+}
+
+void testCoorRange(vector<Line> lineSet, vector<Segment> segmentSet, vector<Ray> raySet, vector<Circle> circleSet)
+{
+	int i;
+	for (i = 0; i < lineSet.size(); i++)
+	{
+		if ((testPointRange(lineSet.at(i).p1) == OUTRANGE) ||
+			(testPointRange(lineSet.at(i).p2) == OUTRANGE))
+		{
+			throw outRangeException();
+		}
+	}
+	for (i = 0; i < segmentSet.size(); i++)
+	{
+		if ((testPointRange(segmentSet.at(i).p1) == OUTRANGE) ||
+			(testPointRange(segmentSet.at(i).p2) == OUTRANGE))
+		{
+			throw outRangeException();
+		}
+	}
+	for (i = 0; i < raySet.size(); i++)
+	{
+		if ((testPointRange(raySet.at(i).start) == OUTRANGE) ||
+			(testPointRange(raySet.at(i).direction) == OUTRANGE))
+		{
+			throw outRangeException();
+		}
+	}
+	for (i = 0; i < circleSet.size(); i++)
+	{
+		if ((testPointRange(circleSet.at(i).center) == OUTRANGE) ||
+			(testDoubleRange(circleSet.at(i).r) == OUTRANGE) ||
+			(circleSet.at(i).r <= 0))
+		{
+			throw outRangeException();
+		}
+	}
+	return;
+}
 
 //求两向量的点乘结果
 double dot(Vector a, Vector b) noexcept

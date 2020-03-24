@@ -1,16 +1,25 @@
 #pragma once
 #include <set>
 #include <vector>
+#include <exception>
 #include "GeoFigures.h"
 
 #define NOCROSS 0
 #define ONECROSS 1
 #define TWOCROSS 2
+#define MANYCROSS 3
 
 #define NOTON 0
 #define ON 1
 
+#define OUTRANGE 0
+#define INRANGE 1
+
 using namespace std;
+
+int testDoubleRange(double r);
+int testPointRange(Point p);
+void testCoorRange(vector<Line> lineSet, vector<Segment> segmentSet, vector<Ray> raySet, vector<Circle> circleSet);
 
 double dot(Vector a, Vector b) noexcept;
 double getPointsDistance(Point a, Point b) noexcept;

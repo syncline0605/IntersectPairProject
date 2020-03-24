@@ -39,6 +39,14 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
+	try {
+		testCoorRange(lineSet, segmentSet, raySet, circleSet);
+	}
+	catch (outRangeException& e) {
+		cout << "坐标范围超限" << endl;
+		return 0;
+	}
+	
 	const int n = calPoint(lineSet, segmentSet, raySet, circleSet, pointSet);
 	outputInFile(outputstring, n);
 
